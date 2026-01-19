@@ -4,26 +4,31 @@ const prisma = require("./prisma");
 const bcrypt = require("bcryptjs");
 
 passport.use(
-  new LocalStrategy(async (email, password, done) => {
-    try {
-      const user = await prisma.user.findUnique({ where: { email } });
+  new LocalStrategy(
+    { usernameField: "email" },
+    async (email, password, done) => {
+      try {
+        const user = await prisma.user.findUnique({
+          where: { email },
+        });
 
-      // Check if user does not exist
-      if (!user) {
-        return done(null, false, { message: "Invalid email or password" });
+        // Check if user does not exist
+        if (!user) {
+          return done(null, false, { message: "Invalid email or password" });
+        }
+
+        const match = await bcrypt.compare(password, user.password);
+        // Check if entered password is incorrect
+        if (!match) {
+          return done(null, false, { message: "Invalid email or password" });
+        }
+
+        return done(null, user);
+      } catch (err) {
+        return done(err);
       }
-
-      const match = await bcrypt.compare(password, user.password);
-      // Check if entered password is incorrect
-      if (!match) {
-        return done(null, false, { message: "Invalid email or password" });
-      }
-
-      return done(null, user);
-    } catch (err) {
-      return done(err);
     }
-  })
+  )
 );
 
 passport.serializeUser((user, done) => {
