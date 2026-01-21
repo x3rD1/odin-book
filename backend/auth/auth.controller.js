@@ -1,6 +1,10 @@
 const authService = require("./auth.service");
 const passport = require("../lib/passport");
 
+exports.getMe = async (req, res, next) => {
+  res.json(req.user);
+};
+
 exports.login = (req, res, next) => {
   passport.authenticate("local", (err, user, info) => {
     if (err) return next(err);
