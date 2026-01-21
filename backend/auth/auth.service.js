@@ -8,9 +8,11 @@ exports.signup = async ({ username, email, password }) => {
   });
 
   // Throw errors
-  if (existingUser.username === username)
-    throw new Error("USERNAME_ALREADY_EXISTS");
-  if (existingUser.email === email) throw new Error("EMAIL_ALREADY_EXISTS");
+  if (existingUser) {
+    if (existingUser.username === username)
+      throw new Error("USERNAME_ALREADY_EXISTS");
+    if (existingUser.email === email) throw new Error("EMAIL_ALREADY_EXISTS");
+  }
 
   // Hash password
   const hashedPassword = await bcrypt.hash(password, 10);
