@@ -23,6 +23,12 @@ function errorHandler(err, req, res, next) {
 
     case "COMMENT_NOT_FOUND":
       return res.status(404).json({ message: "Comment not found" });
+
+    case "LIKE_NOT_FOUND":
+      return res.status(404).json({ message: "Not liked" });
+
+    case "LIKE_ALREADY_EXISTS":
+      return res.status(409).json({ message: "Post already liked" });
   }
 
   console.error("Unhandled error:", err);
