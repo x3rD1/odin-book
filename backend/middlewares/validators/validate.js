@@ -6,11 +6,22 @@ function validate(schema) {
     });
 
     if (error) {
+      const fieldErrors = {};
+
+      for (const d of error.details) {
+        const field = d.path.join(".");
+
+        // Only keep the first error per field
+        if (!fieldErrors[field]) {
+          fieldErrors[field] = {
+            field,
+            message: d.message.replace(/"/g, ""),
+          };
+        }
+      }
+
       return res.status(400).json({
-        errors: error.details.map((d) => ({
-          field: d.path.join("."),
-          message: d.message.replace(/"/g, ""),
-        })),
+        errors: Object.values(fieldErrors),
       });
     }
 
