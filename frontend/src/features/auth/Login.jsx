@@ -3,6 +3,7 @@ import { useNavigate, Navigate } from "react-router-dom";
 import { api } from "../../api/client";
 import Loading from "../../components/Loading";
 import AuthContext from "./AuthContext";
+import styles from "./auth.module.css";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -31,10 +32,15 @@ function Login() {
   if (user) return <Navigate to="/" replace />;
 
   return (
-    <div>
-      <form onSubmit={handleLogin}>
-        {error && <p style={{ color: "red" }}>{error}</p>}
-        <div>
+    <div className={styles.container}>
+      <h1 className={styles.welcomeText}>Welcome back!</h1>
+      <form onSubmit={handleLogin} className={styles.form}>
+        {error && (
+          <p className={styles.error} style={{ color: "red" }}>
+            {error}
+          </p>
+        )}
+        <div className={styles.inputContainer}>
           <label>Email</label>
           <input
             type="email"
@@ -43,7 +49,7 @@ function Login() {
             required
           />
         </div>
-        <div>
+        <div className={styles.inputContainer}>
           <label>Password</label>
           <input
             type="password"
@@ -52,12 +58,15 @@ function Login() {
             required
           />
         </div>
-        <div>
+        <div className={styles.btnContainer}>
           <button type="submit" disabled={loading}>
             {loading ? "Logging in..." : "Login"}
           </button>
         </div>
       </form>
+      <p className={styles.redirectText}>
+        Don't have an account yet? <a href="/signup">Sign up now</a>
+      </p>
     </div>
   );
 }
