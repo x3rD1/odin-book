@@ -3,6 +3,7 @@ import { Navigate, useNavigate } from "react-router-dom";
 import AuthContext from "./AuthContext";
 import { api } from "../../api/client";
 import Loading from "../../components/Loading";
+import styles from "./auth.module.css";
 
 function Signup() {
   const [input, setInput] = useState({
@@ -50,16 +51,18 @@ function Signup() {
   if (user) return <Navigate to="/" replace />;
 
   return (
-    <div>
-      <h1>Sign up for Anonemousse</h1>
-      <form onSubmit={handleSignup}>
+    <div className={styles.container}>
+      <h1 className={styles.welcomeText}>Sign up for Anonemousse</h1>
+      <form onSubmit={handleSignup} className={styles.form}>
         {errors.map(
           (err) =>
             err.field === "_form" && (
-              <p style={{ color: "red" }}>{err.message}</p>
+              <p className={styles.error} style={{ color: "red" }}>
+                {err.message}
+              </p>
             ),
         )}
-        <div>
+        <div className={styles.inputContainer}>
           <label>Username</label>
           <input
             type="text"
@@ -72,11 +75,13 @@ function Signup() {
           {errors.map(
             (err) =>
               err.field === "username" && (
-                <p style={{ color: "red" }}>{err.message}</p>
+                <p className={styles.error} style={{ color: "red" }}>
+                  {err.message}
+                </p>
               ),
           )}
         </div>
-        <div>
+        <div className={styles.inputContainer}>
           <label>Email</label>
           <input
             type="email"
@@ -89,11 +94,13 @@ function Signup() {
           {errors.map(
             (err) =>
               err.field === "email" && (
-                <p style={{ color: "red" }}>{err.message}</p>
+                <p className={styles.error} style={{ color: "red" }}>
+                  {err.message}
+                </p>
               ),
           )}
         </div>
-        <div>
+        <div className={styles.inputContainer}>
           <label>Password</label>
           <input
             type="password"
@@ -106,11 +113,13 @@ function Signup() {
           {errors.map(
             (err) =>
               err.field === "password" && (
-                <p style={{ color: "red" }}>{err.message}</p>
+                <p className={styles.error} style={{ color: "red" }}>
+                  {err.message}
+                </p>
               ),
           )}
         </div>
-        <div>
+        <div className={styles.inputContainer}>
           <label>Confirm password</label>
           <input
             type="password"
@@ -123,16 +132,21 @@ function Signup() {
           {errors.map(
             (err) =>
               err.field === "confirmPassword" && (
-                <p style={{ color: "red" }}>{err.message}</p>
+                <p className={styles.error} style={{ color: "red" }}>
+                  {err.message}
+                </p>
               ),
           )}
         </div>
-        <div>
+        <div className={styles.btnContainer}>
           <button type="submit" disabled={loading}>
             {loading ? "Creating..." : "Create"}
           </button>
         </div>
       </form>
+      <p className={styles.redirectText}>
+        Already have an account? <a href="/login">Log in</a>
+      </p>
     </div>
   );
 }
