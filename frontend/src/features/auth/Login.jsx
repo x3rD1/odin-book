@@ -1,13 +1,14 @@
 import { useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
 import { api } from "../../api/client";
+import Loading from "../../components/Loading";
 import AuthContext from "./AuthContext";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const { refreshUser, loading } = useContext(AuthContext);
+  const { refreshUser, loading, user } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
@@ -20,10 +21,14 @@ function Login() {
       navigate("/", { replace: true });
     } catch (err) {
       console.error("Login failed", err);
-      setError(err.response?.data?.message || "Login failed");
+      setError(err.message || "Login failed");
       setPassword("");
     }
   };
+
+  if (loading) return <Loading />;
+
+  if (user) return <Navigate to="/" replace />;
 
   return (
     <div>
