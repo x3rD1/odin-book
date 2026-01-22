@@ -9,7 +9,7 @@ export function AuthProvider({ children }) {
   const refreshUser = () => {
     auth_api
       .getMe()
-      .then((res) => setUser(res.data))
+      .then((res) => setUser(res))
       .catch(() => setUser(null))
       .finally(() => setLoading(false));
   };
