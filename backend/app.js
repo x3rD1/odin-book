@@ -6,11 +6,14 @@ const express = require("express");
 const session = require("express-session");
 const passport = require("passport");
 const pgSession = require("connect-pg-simple")(session);
+const cors = require("cors");
 const errorHandler = require("./middlewares/errorHandler");
 
 require("./lib/passport");
 
 const app = express();
+
+app.use(cors({ origin: `${process.env.FRONTEND_URL}`, credentials: true }));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
