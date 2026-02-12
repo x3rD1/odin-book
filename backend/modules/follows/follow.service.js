@@ -1,11 +1,27 @@
 const prisma = require("../../lib/prisma");
+const notifService = require("../notifications/notif.service");
 
 exports.toggleFollow = async (targetUserId, currentUserId) => {
+  if (targetUserId === currentUserId) {
+    throw new Error("CANNOT_FOLLOW_SELF");
+  }
+
+  let notif = null;
+
   try {
-    await prisma.follow.create({
+    const follow = await prisma.follow.create({
       data: { followerId: currentUserId, followingId: targetUserId },
+      include: { follower: { select: { username: true } } },
     });
-    return { followed: true };
+
+    notif = await notifService.createNotif({
+      type: "FOLLOW",
+      actorId: currentUserId,
+      receiverId: targetUserId,
+      message: `${follow.follower.username} has started following you.`,
+    });
+
+    return { followed: true, notif };
   } catch (err) {
     if (err.code === "P2002") {
       await prisma.follow.delete({
@@ -16,6 +32,13 @@ exports.toggleFollow = async (targetUserId, currentUserId) => {
           },
         },
       });
+
+      await notifService.removeNotif({
+        type: "FOLLOW",
+        actorId: currentUserId,
+        receiverId: targetUserId,
+      });
+
       return { followed: false };
     }
     if (err.code === "P2003") {
