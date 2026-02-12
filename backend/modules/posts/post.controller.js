@@ -1,4 +1,5 @@
 const postService = require("./post.service");
+const cloudinary = require("../../lib/cloudinary");
 // /posts
 exports.getAllPosts = async (req, res, next) => {
   try {
@@ -28,12 +29,28 @@ exports.getPost = async (req, res, next) => {
 
 exports.createPost = async (req, res, next) => {
   try {
-    const content = req.body.content;
     const userId = req.user.id;
 
-    await postService.createPost(content, userId);
+    const content = req.body.content?.trim() || null;
+    const mediaUrl = req.body.mediaUrl || null;
+    const mediaId = req.body.mediaId || null;
+    const mediaType = req.body.mediaType || null;
 
-    res.sendStatus(201);
+    if (!content && !mediaUrl) {
+      return res.status(400).json({
+        message: "Post must contain text or media",
+      });
+    }
+
+    const post = await postService.createPost({
+      content,
+      mediaUrl,
+      mediaId,
+      mediaType,
+      userId,
+    });
+
+    res.json(post);
   } catch (err) {
     next(err);
   }
@@ -42,7 +59,7 @@ exports.createPost = async (req, res, next) => {
 exports.updatePost = async (req, res, next) => {
   try {
     const postId = Number(req.params.postId);
-    const newContent = req.body.content;
+    const newContent = req.body.content.trim();
     const userId = req.user.id;
 
     await postService.updatePost(postId, newContent, userId);
@@ -57,6 +74,16 @@ exports.deletePost = async (req, res, next) => {
   try {
     const postId = Number(req.params.postId);
     const userId = req.user.id;
+
+    const post = await postService.getPost(postId);
+
+    if (!post) throw new Error("POST_NOT_FOUND");
+
+    if (post.mediaId) {
+      await cloudinary.uploader.destroy(post.mediaId, {
+        resource_type: post.mediaType === "video" ? "video" : "image",
+      });
+    }
 
     await postService.deletePost(postId, userId);
 

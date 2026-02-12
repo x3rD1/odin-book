@@ -15,7 +15,7 @@ exports.getAllPosts = async (userId, cursorId) => {
         select: { userId: true },
       },
       comments: {
-        select: { id: true },
+        select: { userId: true },
       },
     },
     take: 10,
@@ -45,8 +45,27 @@ exports.getPost = async (postId) => {
   return post;
 };
 
-exports.createPost = (content, userId) => {
-  return prisma.post.create({ data: { content, authorId: userId } });
+exports.createPost = async ({
+  content,
+  mediaUrl,
+  mediaId,
+  mediaType,
+  userId,
+}) => {
+  return prisma.post.create({
+    data: {
+      content,
+      mediaUrl,
+      mediaId,
+      mediaType,
+      authorId: userId,
+    },
+    include: {
+      author: true,
+      likes: true,
+      comments: true,
+    },
+  });
 };
 
 exports.updatePost = async (postId, newContent, userId) => {
