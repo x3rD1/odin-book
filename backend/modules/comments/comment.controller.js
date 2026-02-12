@@ -1,4 +1,5 @@
 const commentService = require("./comment.service");
+const cloudinary = require("../../lib/cloudinary");
 
 exports.getAllComments = async (req, res, next) => {
   try {
@@ -35,7 +36,7 @@ exports.getReplies = async (req, res, next) => {
     const replies = await commentService.getReplies(
       postId,
       commentId,
-      cursorId
+      cursorId,
     );
 
     res.json(replies);
@@ -47,12 +48,22 @@ exports.getReplies = async (req, res, next) => {
 exports.createComment = async (req, res, next) => {
   try {
     const postId = Number(req.params.postId);
-    const userId = req.user.id;
-    const content = req.body.content;
+    const user = req.user;
+    const content = req.body.content?.trim() || null;
+    const mediaUrl = req.body.mediaUrl || null;
+    const mediaId = req.body.mediaId || null;
+    const mediaType = req.body.mediaType || null;
 
-    await commentService.createComment(postId, userId, content);
+    const newComment = await commentService.createComment(
+      postId,
+      user,
+      content,
+      mediaUrl,
+      mediaId,
+      mediaType,
+    );
 
-    res.sendStatus(201);
+    res.json(newComment);
   } catch (err) {
     next(err);
   }
@@ -62,12 +73,23 @@ exports.createReply = async (req, res, next) => {
   try {
     const postId = Number(req.params.postId);
     const commentId = Number(req.params.commentId);
-    const userId = req.user.id;
-    const content = req.body.content;
+    const user = req.user;
+    const content = req.body.content?.trim() || null;
+    const mediaUrl = req.body.mediaUrl || null;
+    const mediaId = req.body.mediaId || null;
+    const mediaType = req.body.mediaType || null;
 
-    await commentService.createReply(postId, commentId, userId, content);
+    const newReply = await commentService.createReply(
+      postId,
+      commentId,
+      user,
+      content,
+      mediaUrl,
+      mediaId,
+      mediaType,
+    );
 
-    res.sendStatus(201);
+    res.json(newReply);
   } catch (err) {
     next(err);
   }
@@ -78,7 +100,7 @@ exports.updateComment = async (req, res, next) => {
     const postId = Number(req.params.postId);
     const commentId = Number(req.params.commentId);
     const userId = req.user.id;
-    const content = req.body.content;
+    const content = req.body.content.trim();
 
     await commentService.updateComment(postId, commentId, userId, content);
 
@@ -93,6 +115,17 @@ exports.deleteComment = async (req, res, next) => {
     const postId = Number(req.params.postId);
     const commentId = Number(req.params.commentId);
     const userId = req.user.id;
+
+    const comment = await commentService.getComment(postId, commentId);
+
+    if (!comment) throw new Error("COMMENT_NOT_FOUND");
+    console.log("Deleting:", comment.mediaId, comment.mediaType);
+
+    if (comment.mediaId) {
+      await cloudinary.uploader.destroy(comment.mediaId, {
+        resource_type: comment.mediaType === "video" ? "video" : "image",
+      });
+    }
 
     await commentService.deleteComment(postId, commentId, userId);
 
