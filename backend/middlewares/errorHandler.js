@@ -29,6 +29,12 @@ function errorHandler(err, req, res, next) {
 
     case "LIKE_ALREADY_EXISTS":
       return res.status(409).json({ message: "Post already liked" });
+
+    case "NOTIF_NOT_FOUND":
+      return res.status(404).json({ message: "Notification not found" });
+
+    case "FORBIDDEN":
+      return res.status(403).json({ message: "Forbidden action" });
   }
 
   console.error("Unhandled error:", err);
