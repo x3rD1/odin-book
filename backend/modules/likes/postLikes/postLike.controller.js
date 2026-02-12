@@ -20,11 +20,12 @@ exports.createLike = async (req, res, next) => {
       return res.status(400).json({ message: "Invalid postId" });
     }
 
-    const userId = req.user.id;
+    const user = req.user;
 
-    await postLikeService.createLike(postId, userId);
+    const result = await postLikeService.createLike(postId, user);
 
-    res.sendStatus(201);
+    // Returns the notification id
+    res.json(result);
   } catch (err) {
     next(err);
   }
