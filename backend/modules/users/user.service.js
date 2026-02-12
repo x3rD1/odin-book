@@ -10,6 +10,8 @@ exports.getAllUsers = async (cursorId) => {
       id: true,
       username: true,
       profilePicture: true,
+      follower: { select: { followerId: true } },
+      following: { select: { followingId: true } },
     },
   });
 
@@ -27,20 +29,8 @@ exports.getUser = async (userId) => {
       username: true,
       profilePicture: true,
       createdAt: true,
-      posts: {
-        take: 5,
-        orderBy: { createdAt: "desc" },
-        select: {
-          id: true,
-          content: true,
-          createdAt: true,
-          likes: { select: { userId: true } },
-          comments: { select: { id: true } },
-          author: {
-            select: { id: true, username: true, profilePicture: true },
-          },
-        },
-      },
+      follower: { select: { followerId: true } },
+      following: { select: { followingId: true } },
     },
   });
   // Throw error
