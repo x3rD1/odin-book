@@ -1,4 +1,5 @@
 const prisma = require("../../lib/prisma");
+const notifService = require("../notifications/notif.service");
 
 exports.getAllComments = async (postId, cursorId) => {
   // Check then get if post exists
@@ -7,6 +8,7 @@ exports.getAllComments = async (postId, cursorId) => {
     include: {
       likes: { select: { userId: true } },
       user: { select: { id: true, username: true, profilePicture: true } },
+      subcomments: { select: { id: true } },
     },
     take: 10,
     cursor: cursorId ? { id: cursorId } : undefined,
@@ -40,6 +42,7 @@ exports.getReplies = async (postId, commentId, cursorId) => {
       where: { postId, parentId: commentId },
       include: {
         user: { select: { id: true, username: true, profilePicture: true } },
+        likes: { select: { userId: true } },
       },
       take: 5,
       cursor: cursorId ? { id: cursorId } : undefined,
@@ -59,27 +62,105 @@ exports.getReplies = async (postId, commentId, cursorId) => {
   }
 };
 
-exports.createComment = async (postId, userId, content) => {
+exports.createComment = async (
+  postId,
+  user,
+  content,
+  mediaUrl,
+  mediaId,
+  mediaType,
+) => {
   try {
     // Check then create if posts exists
-    const comment = await prisma.comment.create({
-      data: { content, userId, postId },
-    });
+    const [comment] = await prisma.$transaction([
+      prisma.comment.create({
+        data: {
+          content,
+          userId: user.id,
+          postId,
+          mediaUrl,
+          mediaId,
+          mediaType,
+        },
+        include: {
+          post: { select: { authorId: true } },
+          user: { select: { id: true, username: true, profilePicture: true } },
+          likes: true,
+        },
+      }),
+      prisma.post.update({
+        where: { id: postId },
+        data: { commentCount: { increment: 1 } },
+      }),
+    ]);
 
-    return comment;
+    let notif = null;
+
+    if (comment.post.authorId !== user.id) {
+      notif = await notifService.createNotif({
+        type: "COMMENT",
+        actorId: user.id,
+        receiverId: comment.post.authorId,
+        postId,
+        commentId: comment.id,
+        message: `${user.username} commented on your post: "${content}"`,
+      });
+    }
+
+    return { comment, notif };
   } catch (err) {
     if (err.code === "P2003") throw new Error("POST_NOT_FOUND");
     throw err;
   }
 };
 
-exports.createReply = async (postId, commentId, userId, content) => {
+exports.createReply = async (
+  postId,
+  commentId,
+  user,
+  content,
+  mediaUrl,
+  mediaId,
+  mediaType,
+) => {
   try {
-    const reply = await prisma.comment.create({
-      data: { content, userId, postId, parentId: commentId },
-    });
+    const [reply] = await prisma.$transaction([
+      prisma.comment.create({
+        data: {
+          content,
+          userId: user.id,
+          postId,
+          parentId: commentId,
+          mediaUrl,
+          mediaId,
+          mediaType,
+        },
+        include: {
+          parent: { select: { userId: true } },
+          user: { select: { id: true, username: true, profilePicture: true } },
+          likes: true,
+        },
+      }),
+      prisma.post.update({
+        where: { id: postId },
+        data: { commentCount: { increment: 1 } },
+      }),
+    ]);
 
-    return reply;
+    let notif = null;
+
+    if (reply.parent && reply.parent.userId !== user.id) {
+      notif = await notifService.createNotif({
+        type: "REPLY",
+        actorId: user.id,
+        receiverId: reply.parent.userId,
+        postId,
+        commentId: reply.id,
+        message: `${user.username} replied to your comment: "${content}"`,
+      });
+    }
+
+    return { reply, notif };
   } catch (err) {
     if (err.code === "P2003" && err.meta?.field_name.include("Post")) {
       throw new Error("POST_NOT_FOUND");
@@ -100,11 +181,50 @@ exports.updateComment = async (postId, commentId, userId, content) => {
 };
 
 exports.deleteComment = async (postId, commentId, userId) => {
-  const deletedComment = await prisma.comment.deleteMany({
-    where: { id: commentId, userId, postId },
+  const comment = await prisma.comment.findFirst({
+    where: { id: commentId, postId },
+    include: {
+      post: { select: { authorId: true } },
+      subcomments: { select: { id: true } },
+    },
   });
 
-  if (deletedComment.count === 0) throw new Error("COMMENT_NOT_FOUND");
+  if (!comment) {
+    throw new Error("COMMENT_NOT_FOUND");
+  }
 
-  return deletedComment;
+  const isCommentAuthor = comment.userId === userId;
+  const isPostAuthor = comment.post.authorId === userId;
+
+  if (!isCommentAuthor && !isPostAuthor) {
+    throw new Error("FORBIDDEN");
+  }
+
+  const decrementBy =
+    comment.parentId === null ? comment.subcomments.length + 1 : 1;
+
+  await prisma.$transaction(async (tx) => {
+    if (comment.parentId === null && comment.subcomments.length > 0) {
+      await tx.comment.deleteMany({
+        where: { parentId: commentId },
+      });
+    }
+
+    await tx.comment.delete({
+      where: { id: commentId },
+    });
+
+    await tx.post.update({
+      where: { id: postId },
+      data: { commentCount: { decrement: decrementBy } },
+    });
+  });
+
+  await notifService.removeNotif({
+    type: comment.parentId ? "REPLY" : "COMMENT",
+    actorId: comment.userId,
+    receiverId: comment.post.authorId,
+    postId,
+    commentId,
+  });
 };
