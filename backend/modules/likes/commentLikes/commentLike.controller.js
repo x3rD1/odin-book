@@ -20,11 +20,11 @@ exports.createLike = async (req, res, next) => {
       return res.status(400).json({ message: "Invalid commentId" });
     }
 
-    const userId = req.user.id;
+    const user = req.user;
 
-    await commentLikeService.createLike(commentId, userId);
+    const result = await commentLikeService.createLike(commentId, user);
 
-    res.sendStatus(201);
+    res.json(result);
   } catch (err) {
     next(err);
   }
