@@ -14,15 +14,18 @@
     "@prisma/adapter-pg": "^7.2.0",
     "@prisma/client": "^7.2.0",
     "bcryptjs": "^3.0.3",
+    "cloudinary": "^2.9.0",
     "connect-pg-simple": "^10.0.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
     "express-session": "^1.18.2",
     "joi": "^18.0.2",
+    "multer": "^2.0.2",
     "passport": "^0.7.0",
     "passport-local": "^1.0.0",
-    "pg": "^8.17.1"
+    "pg": "^8.17.1",
+    "socket.io": "^4.8.3"
   },
   "devDependencies": {
     "@types/node": "^25.0.9",
