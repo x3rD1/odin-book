@@ -5,7 +5,7 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client"
+  provider = "prisma-client-js"
   output   = "../generated/prisma"
 }
 
@@ -23,27 +23,33 @@ model User {
   updatedAt      DateTime @updatedAt
 
   // Relation fields
-  posts        Post[] // All posts authored by the user
-  postLikes    PostLike[] // All posts this user has liked
-  comments     Comment[] // All comments this user has made
-  commentLikes CommentLike[] // All comments this user has liked
-  following    Follow[]      @relation("UserIsTheFollower") // Users this user is following
-  follower     Follow[]      @relation("UserIsTheFollowee") // Users who are following this user
+  posts         Post[] // All posts authored by the user
+  postLikes     PostLike[] // All posts this user has liked
+  comments      Comment[] // All comments this user has made
+  commentLikes  CommentLike[] // All comments this user has liked
+  following     Follow[]       @relation("UserIsTheFollower") // Users this user is following
+  follower      Follow[]       @relation("UserIsTheFollowee") // Users who are following this user
+  notifications Notification[]
+  actedNotifs   Notification[] @relation("NotificationActor")
 
   @@index([createdAt])
   @@map("users")
 }
 
 model Post {
-  id        Int        @id @default(autoincrement())
-  content   String
-  likes     PostLike[]
-  comments  Comment[]
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  
-  author    User       @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  authorId  Int
+  id           Int        @id @default(autoincrement())
+  content      String?
+  mediaUrl     String?   
+  mediaId      String?   
+  mediaType    String?   
+  likes        PostLike[]
+  comments     Comment[]
+  commentCount Int        @default(0)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  author   User @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId Int
 
   @@index([authorId])
   @@index([createdAt])
@@ -52,11 +58,11 @@ model Post {
 }
 
 model PostLike {
-  id     Int  @id @default(autoincrement())
-  
+  id Int @id @default(autoincrement())
+
   user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId Int
-  
+
   post   Post @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId Int
 
@@ -67,22 +73,25 @@ model PostLike {
 }
 
 model Comment {
-  id          Int           @id @default(autoincrement())
-  content     String
-  likes       CommentLike[]
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
+  id        Int           @id @default(autoincrement())
+  content   String?
+  mediaUrl  String?   
+  mediaId   String?   
+  mediaType String?  
+  likes     CommentLike[]
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
 
-  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId      Int
-  
-  post        Post          @relation(fields: [postId], references: [id], onDelete: Cascade)
-  postId      Int
-  
-  parent      Comment?      @relation("Subcomments", fields: [parentId], references: [id], onDelete: Cascade) // Parent of this comment, null if top level
-  parentId    Int?
-  
-  subcomments Comment[]     @relation("Subcomments") // All replies to this comment
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId Int
+
+  post   Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId Int
+
+  parent   Comment? @relation("Subcomments", fields: [parentId], references: [id], onDelete: Cascade) // Parent of this comment, null if top level
+  parentId Int?
+
+  subcomments Comment[] @relation("Subcomments") // All replies to this comment
 
   @@index([parentId])
   @@index([postId])
@@ -91,10 +100,10 @@ model Comment {
 }
 
 model CommentLike {
-  id        Int     @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
-  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    Int
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId Int
 
   comment   Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
   commentId Int
@@ -106,10 +115,10 @@ model CommentLike {
 }
 
 model Follow {
-  id          Int  @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
-  follower    User @relation("UserIsTheFollower", fields: [followerId], references: [id], onDelete: Cascade)
-  followerId  Int
+  follower   User @relation("UserIsTheFollower", fields: [followerId], references: [id], onDelete: Cascade)
+  followerId Int
 
   following   User @relation("UserIsTheFollowee", fields: [followingId], references: [id], onDelete: Cascade)
   followingId Int
@@ -118,4 +127,40 @@ model Follow {
   @@index([followerId])
   @@index([followingId])
   @@map("follows")
+}
+
+model Notification {
+  id      Int       @id @default(autoincrement())
+  type    NotifType
+  message String
+
+  receiver   User @relation(fields: [receiverId], references: [id])
+  receiverId Int
+
+  actor   User @relation("NotificationActor", fields: [actorId], references: [id])
+  actorId Int
+
+  postId    Int?
+  commentId Int?
+
+  isRead Boolean @default(false)
+
+  createdAt DateTime @default(now())
+
+  @@map("notifications")
+}
+
+enum NotifType {
+  LIKE
+  COMMENT
+  REPLY
+  FOLLOW
+}
+
+model session {
+  sid    String   @id @db.VarChar
+  sess   Json     @db.Json
+  expire DateTime @db.Timestamp(6)
+
+  @@index([expire], map: "IDX_session_expire")
 }
