@@ -1,12 +1,15 @@
 .overlay {
   position: fixed;
-  inset: 0;
+  top: 0;
+  left: 0;
+  width: 100%;
   background-color: rgba(0, 0, 0, 0.6);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 10001;
   padding: 16px;
+  height: 100dvh;
 }
 
 .modal {
@@ -284,16 +287,18 @@ textarea::placeholder {
     align-items: flex-end;
     padding: 0;
     background-color: rgba(0, 0, 0, 0.5);
+    height: 100dvh;
   }
 
   .modal {
+    max-height: 90dvh;
     max-width: 100%;
     border-radius: 20px 20px 0 0;
     animation: slideUp 0.2s ease-out;
   }
 
   .content {
-    max-height: 50vh;
+    max-height: 50dvh;
   }
 
   .footer {
