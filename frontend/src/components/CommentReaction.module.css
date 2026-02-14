@@ -1,0 +1,108 @@
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+  padding-left: 2px;
+}
+
+.timestamp {
+  font-size: 0.875rem;
+  color: #6b7280;
+  font-weight: 500;
+  cursor: default;
+}
+
+.actionBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  padding: 4px 6px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #6b7280;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.15s;
+}
+
+.actionBtn:hover {
+  color: #4f46e5;
+  background-color: rgba(79, 70, 229, 0.1);
+}
+
+.icon {
+  width: 18px;
+  height: 18px;
+  stroke-width: 2;
+}
+
+.liked {
+  color: #4f46e5;
+}
+
+.liked:hover {
+  color: #4338ca;
+  background-color: rgba(79, 70, 229, 0.15);
+}
+
+.count {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #6b7280;
+  margin-left: -4px;
+}
+
+@media (max-width: 640px) {
+  .actions {
+    gap: 12px;
+  }
+
+  .actionBtn {
+    font-size: 0.8125rem;
+    padding: 3px 5px;
+  }
+
+  .icon {
+    width: 16px;
+    height: 16px;
+  }
+
+  .timestamp {
+    font-size: 0.8125rem;
+  }
+
+  .count {
+    font-size: 0.8125rem;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .timestamp {
+    color: #9ca3af;
+  }
+
+  .actionBtn {
+    color: #9ca3af;
+  }
+
+  .actionBtn:hover {
+    color: #818cf8;
+    background-color: rgba(129, 140, 248, 0.1);
+  }
+
+  .liked {
+    color: #818cf8;
+  }
+
+  .liked:hover {
+    color: #a5b4fc;
+    background-color: rgba(129, 140, 248, 0.15);
+  }
+
+  .count {
+    color: #9ca3af;
+  }
+}
