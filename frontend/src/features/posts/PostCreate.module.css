@@ -1,0 +1,127 @@
+.container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background-color: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #f3f4f6;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+}
+
+.container:hover {
+  border-color: #e5e7eb;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transform: translateY(-1px);
+}
+
+.container:active {
+  transform: translateY(0);
+}
+
+.avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid #f3f4f6;
+  flex-shrink: 0;
+  background-color: #f9fafb;
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.avatar:hover {
+  transform: scale(1.05);
+  border-color: #e5e7eb;
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.inputTrigger {
+  flex: 1;
+  background-color: #f3f4f6;
+  border: none;
+  border-radius: 9999px;
+  padding: 12px 18px;
+  font-size: 0.9375rem;
+  color: #9ca3af;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 400;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.container:hover .inputTrigger {
+  background-color: #e5e7eb;
+  color: #6b7280;
+}
+
+.inputTrigger:active {
+  transform: scale(0.98);
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  .container {
+    padding: 14px;
+    gap: 12px;
+    border-radius: 12px;
+  }
+
+  .avatar {
+    width: 40px;
+    height: 40px;
+  }
+
+  .inputTrigger {
+    padding: 10px 16px;
+    font-size: 0.875rem;
+  }
+}
+
+/* Dark Mode - Keeping it clean and light as per reference */
+@media (prefers-color-scheme: dark) {
+  .container {
+    background-color: #ffffff;
+    border-color: #f3f4f6;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  }
+
+  .container:hover {
+    border-color: #e5e7eb;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  .avatar {
+    border-color: #f3f4f6;
+    background-color: #f9fafb;
+  }
+
+  .avatar:hover {
+    border-color: #e5e7eb;
+  }
+
+  .inputTrigger {
+    background-color: #f3f4f6;
+    color: #9ca3af;
+  }
+
+  .container:hover .inputTrigger {
+    background-color: #e5e7eb;
+    color: #6b7280;
+  }
+}
