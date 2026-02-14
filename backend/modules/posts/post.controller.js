@@ -59,10 +59,21 @@ exports.createPost = async (req, res, next) => {
 exports.updatePost = async (req, res, next) => {
   try {
     const postId = Number(req.params.postId);
-    const newContent = req.body.content.trim();
     const userId = req.user.id;
 
-    await postService.updatePost(postId, newContent, userId);
+    const newContent =
+      typeof req.body.content === "string"
+        ? req.body.content.trim()
+        : undefined;
+
+    await postService.updatePost({
+      postId,
+      newContent,
+      mediaUrl: req.body.mediaUrl,
+      mediaId: req.body.mediaId,
+      mediaType: req.body.mediaType,
+      userId,
+    });
 
     res.sendStatus(204);
   } catch (err) {

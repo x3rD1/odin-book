@@ -1,4 +1,5 @@
 const prisma = require("../../lib/prisma");
+const cloudinary = require("../../lib/cloudinary");
 
 exports.getAllPosts = async (userId, cursorId) => {
   // Get posts from user and following
@@ -68,16 +69,45 @@ exports.createPost = async ({
   });
 };
 
-exports.updatePost = async (postId, newContent, userId) => {
-  // Check then update if post exists and author is user
-  const result = await prisma.post.updateMany({
-    where: { id: postId, authorId: userId },
-    data: { content: newContent },
+exports.updatePost = async ({
+  postId,
+  newContent,
+  mediaUrl,
+  mediaId,
+  mediaType,
+  userId,
+}) => {
+  const existingPost = await prisma.post.findUnique({
+    where: { id: postId },
   });
 
-  if (result.count === 0) throw new Error("POST_NOT_FOUND");
+  if (!existingPost || existingPost.authorId !== userId) {
+    throw new Error("POST_NOT_FOUND");
+  }
 
-  return result;
+  const oldMediaId = existingPost.mediaId;
+
+  const mediaWasReplaced = oldMediaId && mediaId && oldMediaId !== mediaId;
+
+  const mediaWasRemoved = oldMediaId && !mediaId;
+
+  if (mediaWasReplaced || mediaWasRemoved) {
+    await cloudinary.uploader.destroy(oldMediaId, {
+      resource_type: existingPost.mediaType === "video" ? "video" : "image",
+    });
+  }
+
+  const updatedPost = await prisma.post.update({
+    where: { id: postId },
+    data: {
+      content: newContent,
+      mediaUrl,
+      mediaId,
+      mediaType,
+    },
+  });
+
+  return updatedPost;
 };
 
 exports.deletePost = async (postId, userId) => {
