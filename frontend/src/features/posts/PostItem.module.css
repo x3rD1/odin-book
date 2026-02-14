@@ -1,0 +1,253 @@
+.container {
+  position: relative;
+  width: 100%;
+  background-color: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #f3f4f6;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.2s ease;
+}
+
+.container:hover {
+  border-color: #e5e7eb;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transform: translateY(-2px);
+}
+
+/* Header */
+.postHeader {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+  cursor: pointer;
+  gap: 12px;
+}
+
+.imgContainer {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 2px solid #f3f4f6;
+  transition: transform 0.2s ease;
+}
+
+.imgContainer:hover {
+  transform: scale(1.05);
+}
+
+.imgContainer img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* User Info */
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.author {
+  max-width: fit-content;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #111827;
+  line-height: 1.2;
+  transition: color 0.2s;
+}
+
+.author:hover {
+  color: #7c3aed;
+}
+
+.created {
+  font-size: 0.8125rem;
+  color: #9ca3af;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+/* More Action (if present) */
+.postHeader > button,
+.postHeader > [class*="More"] {
+  margin-left: auto;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+}
+
+.container:hover .postHeader > button,
+.container:hover .postHeader > [class*="More"] {
+  opacity: 1;
+}
+
+/* Content */
+.content {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #374151;
+  margin-bottom: 12px;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+/* Media Container - full width, maintains aspect ratio, max height limit */
+.mediaContainer {
+  width: 100%;
+  margin-top: 4px;
+  margin-bottom: 12px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #f3f4f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-height: 400px;
+}
+
+.mediaContainer img,
+.mediaContainer video {
+  width: 100%;
+  height: 100%;
+  max-height: 400px;
+  object-fit: contain;
+  display: block;
+}
+
+/* Reactions */
+.reactions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 4px;
+  padding-top: 12px;
+  border-top: 1px solid #f3f4f6;
+}
+
+.iconContainer {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  color: #9ca3af;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.iconContainer:hover {
+  color: #7c3aed;
+}
+
+.iconContainer .liked {
+  fill: #7c3aed;
+  stroke: #c4b5fd;
+}
+
+.icon {
+  width: 20px;
+  height: 20px;
+  stroke-width: 2;
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  .container {
+    padding: 14px;
+    border-radius: 12px;
+  }
+
+  .container:hover {
+    transform: translateY(-1px);
+  }
+
+  .imgContainer {
+    width: 40px;
+    height: 40px;
+  }
+
+  .author {
+    font-size: 0.9375rem;
+  }
+
+  .created {
+    font-size: 0.75rem;
+  }
+
+  .content {
+    font-size: 0.9375rem;
+  }
+
+  .mediaContainer {
+    max-height: 400px;
+    border-radius: 8px;
+  }
+
+  .mediaContainer img,
+  .mediaContainer video {
+    max-height: 400px;
+  }
+
+  .postHeader > button,
+  .postHeader > [class*="More"] {
+    opacity: 1;
+  }
+}
+
+/* Dark Mode - keeping light per reference */
+@media (prefers-color-scheme: dark) {
+  .container {
+    background-color: #ffffff;
+    border-color: #f3f4f6;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  }
+
+  .container:hover {
+    border-color: #e5e7eb;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  .imgContainer {
+    border-color: #f3f4f6;
+  }
+
+  .author {
+    color: #111827;
+  }
+
+  .author:hover {
+    color: #7c3aed;
+  }
+
+  .created {
+    color: #9ca3af;
+  }
+
+  .content {
+    color: #374151;
+  }
+
+  .mediaContainer {
+    background-color: #000000;
+    border-color: #f3f4f6;
+  }
+
+  .reactions {
+    border-color: #f3f4f6;
+  }
+
+  .iconContainer {
+    color: #9ca3af;
+  }
+
+  .iconContainer:hover {
+    color: #7c3aed;
+  }
+}
