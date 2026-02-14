@@ -1,0 +1,166 @@
+.container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 16px;
+  cursor: pointer;
+  transition: background-color 0.15s;
+  border-radius: 8px;
+  margin: 0 4px;
+}
+
+.container:hover {
+  background-color: #f9fafb;
+}
+
+.container:active {
+  background-color: #f3f4f6;
+}
+
+/* Avatar */
+.imgContainer {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.imgContainer img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* User Info */
+.userInfo {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-width: 0;
+}
+
+.userInfo span {
+  font-weight: 700;
+  font-size: 1.125rem;
+  color: #111827;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color 0.2s;
+}
+
+.container:hover .userInfo span {
+  color: #4f46e5;
+}
+
+/* Follow Button */
+.userInfo button {
+  padding: 8px 16px;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+  flex-shrink: 0;
+  border: 1.5px solid #4f46e5;
+}
+
+/* Not following - filled button */
+.userInfo button:not(.following) {
+  background-color: #4f46e5;
+  color: #ffffff;
+  border-color: #4f46e5;
+}
+
+.userInfo button:not(.following):hover {
+  background-color: #4338ca;
+  border-color: #4338ca;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+}
+
+/* Following - outline button */
+.userInfo button.following {
+  background-color: transparent;
+  color: #4f46e5;
+}
+
+.userInfo button.following:hover {
+  background-color: #fef2f2;
+  border-color: #dc2626;
+  color: #dc2626;
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  .container {
+    padding: 10px 12px;
+    gap: 10px;
+  }
+
+  .imgContainer {
+    width: 44px;
+    height: 44px;
+  }
+
+  .userInfo span {
+    font-size: 0.875rem;
+  }
+
+  .userInfo button {
+    padding: 6px 14px;
+    font-size: 0.8125rem;
+  }
+}
+
+/* Dark Mode */
+@media (prefers-color-scheme: dark) {
+  .container:hover {
+    background-color: #1f2937;
+  }
+
+  .container:active {
+    background-color: #374151;
+  }
+
+  .imgContainer {
+    border-color: #4b5563;
+    background-color: #374151;
+  }
+
+  .userInfo span {
+    color: #f9fafb;
+  }
+
+  .container:hover .userInfo span {
+    color: #818cf8;
+  }
+
+  .userInfo button:not(.following) {
+    background-color: #818cf8;
+    border-color: #818cf8;
+    color: #111827;
+  }
+
+  .userInfo button:not(.following):hover {
+    background-color: #a5b4fc;
+    border-color: #a5b4fc;
+  }
+
+  .userInfo button.following {
+    background-color: transparent;
+    border-color: #818cf8;
+    color: #818cf8;
+  }
+
+  .userInfo button.following:hover {
+    background-color: rgba(248, 113, 113, 0.1);
+    border-color: #f87171;
+    color: #f87171;
+  }
+}
