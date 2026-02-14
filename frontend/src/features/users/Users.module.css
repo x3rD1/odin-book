@@ -1,0 +1,280 @@
+.container {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  min-height: 100svh;
+  background-color: #ffffff;
+}
+
+/* Header */
+.header {
+  position: sticky;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid #e5e7eb;
+  z-index: 10;
+}
+
+.backBtn {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  color: #6b7280;
+  padding: 0;
+  transition: all 0.2s;
+}
+
+.backBtn:hover {
+  background-color: #f3f4f6;
+  color: #111827;
+  transform: translateX(-2px);
+}
+
+.backBtn svg {
+  width: 20px;
+  height: 20px;
+  stroke-width: 2;
+}
+
+.title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0;
+}
+
+.spacer {
+  width: 36px;
+}
+
+/* List Container */
+.listContainer {
+  padding: 8px 0;
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.list li {
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.list li:last-child {
+  border-bottom: none;
+}
+
+/* Skeleton Loading */
+.skeletonList {
+  padding: 8px 16px;
+}
+
+.skeletonItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.skeletonAvatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.skeletonInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.skeletonName {
+  width: 120px;
+  height: 14px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.skeletonUsername {
+  width: 80px;
+  height: 12px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  animation-delay: 0.1s;
+}
+
+.skeletonButton {
+  width: 80px;
+  height: 32px;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  animation-delay: 0.2s;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Empty State */
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 24px;
+  text-align: center;
+}
+
+.emptyIcon {
+  width: 80px;
+  height: 80px;
+  background: #f3f4f6;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  color: #9ca3af;
+}
+
+.emptyIcon svg {
+  width: 40px;
+  height: 40px;
+  stroke-width: 1.5;
+}
+
+.empty h3 {
+  margin: 0 0 8px 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.empty p {
+  margin: 0;
+  font-size: 0.9375rem;
+  color: #6b7280;
+  max-width: 280px;
+  line-height: 1.5;
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  .header {
+    padding: 10px 12px;
+  }
+
+  .backBtn {
+    width: 32px;
+    height: 32px;
+  }
+
+  .title {
+    font-size: 1rem;
+  }
+
+  .spacer {
+    width: 32px;
+  }
+
+  .skeletonList {
+    padding: 8px 12px;
+  }
+
+  .skeletonAvatar {
+    width: 44px;
+    height: 44px;
+  }
+
+  .empty {
+    padding: 60px 20px;
+  }
+
+  .emptyIcon {
+    width: 64px;
+    height: 64px;
+  }
+
+  .empty h3 {
+    font-size: 1.125rem;
+  }
+}
+
+/* Dark Mode */
+@media (prefers-color-scheme: dark) {
+  .container {
+    background-color: #111827;
+  }
+
+  .header {
+    background: rgba(17, 24, 39, 0.95);
+    border-bottom-color: #374151;
+  }
+
+  .backBtn {
+    color: #9ca3af;
+  }
+
+  .backBtn:hover {
+    background-color: #374151;
+    color: #f9fafb;
+  }
+
+  .title {
+    color: #f9fafb;
+  }
+
+  .list li {
+    border-bottom-color: #374151;
+  }
+
+  .skeletonAvatar,
+  .skeletonName,
+  .skeletonUsername,
+  .skeletonButton {
+    background: linear-gradient(90deg, #374151 25%, #4b5563 50%, #374151 75%);
+    background-size: 200% 100%;
+  }
+
+  .emptyIcon {
+    background: #374151;
+    color: #6b7280;
+  }
+
+  .empty h3 {
+    color: #f9fafb;
+  }
+
+  .empty p {
+    color: #9ca3af;
+  }
+}
