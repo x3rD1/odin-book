@@ -21,6 +21,7 @@ export function AuthProvider({ children }) {
     user,
     setUser,
     loading,
+    setLoading,
     refreshUser,
   };
 

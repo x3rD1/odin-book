@@ -9,7 +9,7 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const { refreshUser, loading, user } = useContext(AuthContext);
+  const { refreshUser, loading, setLoading, user } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
@@ -17,6 +17,7 @@ function Login() {
     setError("");
 
     try {
+      setLoading(true);
       await api.post("/auth/login", { email, password });
       await refreshUser();
       navigate("/", { replace: true });
@@ -24,6 +25,9 @@ function Login() {
       console.error("Login failed", err);
       setError(err.message || "Login failed");
       setPassword("");
+      setLoading(false);
+    } finally {
+      setLoading(false);
     }
   };
 
