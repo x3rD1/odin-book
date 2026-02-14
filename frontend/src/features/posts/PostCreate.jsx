@@ -11,7 +11,7 @@ function PostCreate({ setPosts }) {
 
   return (
     <>
-      <div className={styles.container} onClick={() => setOpenModal(true)}>
+      <div className={styles.container}>
         <div
           className={styles.avatar}
           onClick={(e) => {
@@ -28,7 +28,10 @@ function PostCreate({ setPosts }) {
           />
         </div>
 
-        <button className={styles.inputTrigger}>
+        <button
+          className={styles.inputTrigger}
+          onClick={() => setOpenModal(true)}
+        >
           What's on your mind, {user.username}?
         </button>
       </div>
