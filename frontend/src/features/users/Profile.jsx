@@ -105,6 +105,23 @@ function Profile() {
 
   const isFollowing = person.follower.some((f) => f.followerId === user.id);
   const isOwnProfile = user.id === person.id;
+  const canViewPosts = isOwnProfile || isFollowing;
+
+  const LockIcon = () => (
+    <svg
+      width="48"
+      height="48"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <rect x="3" y="11" width="18" height="11" rx="2" />
+      <path d="M7 11V7a5 5 0 0110 0v4" />
+    </svg>
+  );
 
   return (
     <div className={styles.container}>
@@ -205,7 +222,15 @@ function Profile() {
       </div>
 
       <section className={styles.postsSection}>
-        {userPosts.length === 0 ? (
+        {!canViewPosts ? (
+          <div className={styles.privateState}>
+            <div className={styles.lockIcon}>
+              <LockIcon />
+            </div>
+            <h3>This account is private</h3>
+            <p>Follow {person.username} to see their posts.</p>
+          </div>
+        ) : userPosts.length === 0 ? (
           <div className={styles.emptyState}>
             <div className={styles.emptyIcon}>📝</div>
             <h3>No posts yet</h3>

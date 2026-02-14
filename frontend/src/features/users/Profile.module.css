@@ -470,6 +470,21 @@
   box-shadow: 0 6px 20px rgba(124, 58, 237, 0.45);
 }
 
+.privateState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+  opacity: 0.9;
+}
+
+.lockIcon {
+  margin-bottom: 16px;
+  opacity: 0.6;
+}
+
 /* Mobile */
 @media (max-width: 640px) {
   .nav {
