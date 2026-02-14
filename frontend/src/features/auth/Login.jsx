@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { useNavigate, Navigate } from "react-router-dom";
+import { useNavigate, Navigate, Link } from "react-router-dom";
 import { api } from "../../api/client";
 import Loading from "../../components/Loading";
 import AuthContext from "./AuthContext";
@@ -27,46 +27,55 @@ function Login() {
     }
   };
 
-  if (loading) return <Loading />;
-
+  // Redirect if already logged in
   if (user) return <Navigate to="/" replace />;
 
   return (
-    <div className={styles.container}>
-      <h1 className={styles.welcomeText}>Welcome back!</h1>
-      <form onSubmit={handleLogin} className={styles.form}>
-        {error && (
-          <p className={styles.error} style={{ color: "red" }}>
-            {error}
-          </p>
-        )}
-        <div className={styles.inputContainer}>
-          <label>Email</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-        <div className={styles.inputContainer}>
-          <label>Password</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <div className={styles.btnContainer}>
-          <button type="submit" disabled={loading}>
-            {loading ? "Logging in..." : "Login"}
+    <div className={styles.page}>
+      {loading && <Loading />}
+
+      <div className={`${styles.container} ${loading ? styles.blurred : ""}`}>
+        <h1 className={styles.welcomeText}>Welcome back</h1>
+        <form onSubmit={handleLogin} className={styles.form}>
+          {error && <div className={styles.errorBanner}>{error}</div>}
+
+          <div className={styles.inputGroup}>
+            <label htmlFor="email">Email</label>
+            <input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter your email"
+              required
+              disabled={loading}
+            />
+          </div>
+
+          <div className={styles.inputGroup}>
+            <label htmlFor="password">Password</label>
+            <input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Enter your password"
+              required
+              disabled={loading}
+            />
+          </div>
+
+          <button type="submit" className={styles.submitBtn} disabled={loading}>
+            {loading ? "Signing in..." : "Sign In"}
           </button>
-        </div>
-      </form>
-      <p className={styles.redirectText}>
-        Don't have an account yet? <a href="/signup">Sign up now</a>
-      </p>
+        </form>
+        <p className={styles.redirectText}>
+          Don't have an account?{" "}
+          <Link to="/signup" className={styles.link}>
+            Sign up
+          </Link>
+        </p>
+      </div>
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate, useNavigate, Link } from "react-router-dom";
 import AuthContext from "./AuthContext";
 import { api } from "../../api/client";
 import Loading from "../../components/Loading";
@@ -29,124 +29,121 @@ function Signup() {
       if (Array.isArray(err.errors)) {
         setErrors(err.errors);
       } else if (err.message) {
-        setErrors([
-          {
-            field: "_form",
-            message: err.message,
-          },
-        ]);
+        setErrors([{ field: "_form", message: err.message }]);
       } else {
-        setErrors([
-          {
-            field: "_form",
-            message: "Signup failed",
-          },
-        ]);
+        setErrors([{ field: "_form", message: "Signup failed" }]);
       }
     }
   };
 
-  if (loading) return <Loading />;
+  const getFieldError = (field) => {
+    return errors.find((err) => err.field === field)?.message;
+  };
 
   if (user) return <Navigate to="/" replace />;
 
   return (
-    <div className={styles.container}>
-      <h1 className={styles.welcomeText}>Sign up for Anonemousse</h1>
-      <form onSubmit={handleSignup} className={styles.form}>
-        {errors.map(
-          (err) =>
-            err.field === "_form" && (
-              <p className={styles.error} style={{ color: "red" }}>
-                {err.message}
-              </p>
-            ),
-        )}
-        <div className={styles.inputContainer}>
-          <label>Username</label>
-          <input
-            type="text"
-            value={input.username}
-            onChange={(e) =>
-              setInput((prev) => ({ ...prev, username: e.target.value }))
-            }
-            required
-          />
-          {errors.map(
-            (err) =>
-              err.field === "username" && (
-                <p className={styles.error} style={{ color: "red" }}>
-                  {err.message}
-                </p>
-              ),
+    <div className={styles.page}>
+      {loading && <Loading />}
+      <div className={`${styles.container} ${loading ? styles.blurred : ""}`}>
+        <h1 className={styles.welcomeText}>Create account</h1>
+
+        <form onSubmit={handleSignup} className={styles.form}>
+          {getFieldError("_form") && (
+            <div className={styles.errorBanner}>{getFieldError("_form")}</div>
           )}
-        </div>
-        <div className={styles.inputContainer}>
-          <label>Email</label>
-          <input
-            type="email"
-            value={input.email}
-            onChange={(e) =>
-              setInput((prev) => ({ ...prev, email: e.target.value }))
-            }
-            required
-          />
-          {errors.map(
-            (err) =>
-              err.field === "email" && (
-                <p className={styles.error} style={{ color: "red" }}>
-                  {err.message}
-                </p>
-              ),
-          )}
-        </div>
-        <div className={styles.inputContainer}>
-          <label>Password</label>
-          <input
-            type="password"
-            value={input.password}
-            onChange={(e) =>
-              setInput((prev) => ({ ...prev, password: e.target.value }))
-            }
-            required
-          />
-          {errors.map(
-            (err) =>
-              err.field === "password" && (
-                <p className={styles.error} style={{ color: "red" }}>
-                  {err.message}
-                </p>
-              ),
-          )}
-        </div>
-        <div className={styles.inputContainer}>
-          <label>Confirm password</label>
-          <input
-            type="password"
-            value={input.confirmPassword}
-            onChange={(e) =>
-              setInput((prev) => ({ ...prev, confirmPassword: e.target.value }))
-            }
-            required
-          />
-          {errors.map(
-            (err) =>
-              err.field === "confirmPassword" && (
-                <p className={styles.error} style={{ color: "red" }}>
-                  {err.message}
-                </p>
-              ),
-          )}
-        </div>
-        <div className={styles.btnContainer}>
-          <button type="submit" disabled={loading}>
-            {loading ? "Creating..." : "Create"}
+
+          <div className={styles.inputGroup}>
+            <label htmlFor="username">Username</label>
+            <input
+              id="username"
+              type="text"
+              value={input.username}
+              onChange={(e) =>
+                setInput((prev) => ({ ...prev, username: e.target.value }))
+              }
+              placeholder="Choose a username"
+              required
+            />
+            {getFieldError("username") && (
+              <span className={styles.fieldError}>
+                {getFieldError("username")}
+              </span>
+            )}
+          </div>
+
+          <div className={styles.inputGroup}>
+            <label htmlFor="email">Email</label>
+            <input
+              id="email"
+              type="email"
+              value={input.email}
+              onChange={(e) =>
+                setInput((prev) => ({ ...prev, email: e.target.value }))
+              }
+              placeholder="Enter your email"
+              required
+            />
+            {getFieldError("email") && (
+              <span className={styles.fieldError}>
+                {getFieldError("email")}
+              </span>
+            )}
+          </div>
+
+          <div className={styles.inputGroup}>
+            <label htmlFor="password">Password</label>
+            <input
+              id="password"
+              type="password"
+              value={input.password}
+              onChange={(e) =>
+                setInput((prev) => ({ ...prev, password: e.target.value }))
+              }
+              placeholder="Create a password"
+              required
+            />
+            {getFieldError("password") && (
+              <span className={styles.fieldError}>
+                {getFieldError("password")}
+              </span>
+            )}
+          </div>
+
+          <div className={styles.inputGroup}>
+            <label htmlFor="confirmPassword">Confirm Password</label>
+            <input
+              id="confirmPassword"
+              type="password"
+              value={input.confirmPassword}
+              onChange={(e) =>
+                setInput((prev) => ({
+                  ...prev,
+                  confirmPassword: e.target.value,
+                }))
+              }
+              placeholder="Confirm your password"
+              required
+            />
+            {getFieldError("confirmPassword") && (
+              <span className={styles.fieldError}>
+                {getFieldError("confirmPassword")}
+              </span>
+            )}
+          </div>
+
+          <button type="submit" className={styles.submitBtn} disabled={loading}>
+            {loading ? "Creating..." : "Create Account"}
           </button>
-        </div>
-      </form>
-      <p className={styles.redirectText}>
-        Already have an account? <a href="/login">Log in</a>
-      </p>
+        </form>
+
+        <p className={styles.redirectText}>
+          Already have an account?{" "}
+          <Link to="/login" className={styles.link}>
+            Sign in
+          </Link>
+        </p>
+      </div>
     </div>
   );
 }
