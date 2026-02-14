@@ -37,28 +37,6 @@ function CreatePostModal({
   const isEditing = Boolean(postId);
 
   useEffect(() => {
-    const updatePosition = () => {
-      const viewport = window.visualViewport;
-      if (!viewport) return;
-
-      document.documentElement.style.setProperty(
-        "--keyboard-offset",
-        `${viewport.offsetTop}px`,
-      );
-    };
-
-    updatePosition();
-
-    window.visualViewport?.addEventListener("resize", updatePosition);
-    window.visualViewport?.addEventListener("scroll", updatePosition);
-
-    return () => {
-      window.visualViewport?.removeEventListener("resize", updatePosition);
-      window.visualViewport?.removeEventListener("scroll", updatePosition);
-    };
-  }, []);
-
-  useEffect(() => {
     const timer = setTimeout(() => {
       textareaRef.current?.focus();
     }, 100);
