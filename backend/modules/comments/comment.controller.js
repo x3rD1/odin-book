@@ -100,9 +100,20 @@ exports.updateComment = async (req, res, next) => {
     const postId = Number(req.params.postId);
     const commentId = Number(req.params.commentId);
     const userId = req.user.id;
-    const content = req.body.content.trim();
+    const newContent =
+      typeof req.body.content === "string"
+        ? req.body.content.trim()
+        : undefined;
 
-    await commentService.updateComment(postId, commentId, userId, content);
+    await commentService.updateComment({
+      postId,
+      commentId,
+      userId,
+      newContent,
+      mediaUrl: req.body.mediaUrl ?? null,
+      mediaId: req.body.mediaId ?? null,
+      mediaType: req.body.mediaType ?? null,
+    });
 
     res.sendStatus(204);
   } catch (err) {

@@ -1,5 +1,6 @@
 const prisma = require("../../lib/prisma");
 const notifService = require("../notifications/notif.service");
+const cloudinary = require("../../lib/cloudinary");
 
 exports.getAllComments = async (postId, cursorId) => {
   // Check then get if post exists
@@ -170,13 +171,48 @@ exports.createReply = async (
   }
 };
 
-exports.updateComment = async (postId, commentId, userId, content) => {
-  const updatedComment = await prisma.comment.updateMany({
-    where: { id: commentId, userId, postId },
-    data: { content },
+exports.updateComment = async ({
+  postId,
+  commentId,
+  userId,
+  newContent,
+  mediaUrl,
+  mediaId,
+  mediaType,
+}) => {
+  const existingComment = await prisma.comment.findUnique({
+    where: { id: commentId },
   });
 
-  if (updatedComment.count === 0) throw new Error("COMMENT_NOT_FOUND");
+  if (
+    !existingComment ||
+    existingComment.userId !== userId ||
+    existingComment.postId !== postId
+  ) {
+    throw new Error("COMMENT_NOT_FOUND");
+  }
+
+  const oldMediaId = existingComment.mediaId;
+
+  const mediaWasReplaced = oldMediaId && mediaId && oldMediaId !== mediaId;
+  const mediaWasRemoved = oldMediaId && !mediaId;
+
+  if (mediaWasReplaced || mediaWasRemoved) {
+    await cloudinary.uploader.destroy(oldMediaId, {
+      resource_type: existingComment.mediaType === "video" ? "video" : "image",
+    });
+  }
+
+  const updatedComment = await prisma.comment.update({
+    where: { id: commentId },
+    data: {
+      content: newContent,
+      mediaUrl,
+      mediaId,
+      mediaType,
+    },
+  });
+
   return updatedComment;
 };
 
