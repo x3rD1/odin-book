@@ -10,3 +10,11 @@
   padding: 0;
   box-sizing: border-box;
 }
+
+h1,
+h2,
+span,
+img,
+button {
+  user-select: none;
+}

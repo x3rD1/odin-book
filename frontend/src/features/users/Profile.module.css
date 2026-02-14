@@ -197,6 +197,7 @@
   background: #f0fdf4;
   border-radius: 20px;
   width: fit-content;
+  user-select: none;
 }
 
 .onlineIndicator::before {
