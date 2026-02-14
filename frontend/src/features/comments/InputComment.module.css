@@ -1,0 +1,238 @@
+.inputWrapper {
+  width: 100%;
+  background: #ffffff;
+  border-top: 1px solid #f3f4f6;
+}
+
+.inputContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.textInput {
+  width: 100%;
+  background-color: #f3f4f6;
+  border: 1.5px solid transparent;
+  border-radius: 16px;
+  padding: 12px 16px;
+  font-size: 0.9375rem;
+  color: #111827;
+  outline: none;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.textInput::placeholder {
+  color: #9ca3af;
+  font-weight: 400;
+}
+
+.textInput:focus {
+  background-color: #ffffff;
+  border-color: #7c3aed;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+}
+
+/* Media Preview */
+.mediaPreview {
+  position: relative;
+  width: 100%;
+  max-width: 200px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #f9fafb;
+  border: 1px solid #f3f4f6;
+}
+
+.mediaPreview img,
+.mediaPreview video {
+  width: 100%;
+  height: auto;
+  max-height: 150px;
+  object-fit: contain;
+  display: block;
+}
+
+.removeMediaBtn {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 24px;
+  height: 24px;
+  background: rgba(0, 0, 0, 0.6);
+  border: none;
+  border-radius: 50%;
+  color: #ffffff;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.15s;
+}
+
+.removeMediaBtn:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+/* Action Bar - Icons left, Send right */
+.actionBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.leftActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hiddenInput {
+  display: none;
+}
+
+.iconBtn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: #f3f4f6;
+  color: #7c3aed;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.iconBtn:hover {
+  background: #e5e7eb;
+  transform: translateY(-1px);
+}
+
+.iconBtn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.gifBtn {
+  padding: 8px 14px;
+  border-radius: 20px;
+  border: none;
+  background: #f3f4f6;
+  color: #7c3aed;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.gifBtn:hover {
+  background: #e5e7eb;
+  transform: translateY(-1px);
+}
+
+.sendBtn {
+  background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 9999px;
+  padding: 10px 24px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  box-shadow: 0 4px 14px rgba(124, 58, 237, 0.35);
+}
+
+.sendBtn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(124, 58, 237, 0.45);
+  background: linear-gradient(135deg, #6d28d9 0%, #5b21b6 100%);
+}
+
+.sendBtn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.sendBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none;
+  background: #d1d5db;
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  .inputWrapper {
+    padding: 10px 12px;
+  }
+
+  .textInput {
+    padding: 10px 14px;
+    font-size: 0.875rem;
+    border-radius: 12px;
+  }
+
+  .iconBtn {
+    width: 32px;
+    height: 32px;
+  }
+
+  .gifBtn {
+    padding: 6px 12px;
+    font-size: 0.75rem;
+  }
+
+  .sendBtn {
+    padding: 8px 20px;
+    font-size: 0.8125rem;
+  }
+}
+
+/* Dark Mode */
+@media (prefers-color-scheme: dark) {
+  .inputWrapper {
+    background: #ffffff;
+    border-top-color: #f3f4f6;
+  }
+
+  .textInput {
+    background-color: #f3f4f6;
+    color: #111827;
+  }
+
+  .textInput::placeholder {
+    color: #9ca3af;
+  }
+
+  .textInput:focus {
+    background-color: #ffffff;
+    border-color: #7c3aed;
+  }
+
+  .iconBtn {
+    background: #f3f4f6;
+    color: #7c3aed;
+  }
+
+  .iconBtn:hover {
+    background: #e5e7eb;
+  }
+
+  .gifBtn {
+    background: #f3f4f6;
+    color: #7c3aed;
+  }
+
+  .gifBtn:hover {
+    background: #e5e7eb;
+  }
+}
