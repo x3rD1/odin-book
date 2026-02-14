@@ -19,7 +19,7 @@ app.use(cors({ origin: `${process.env.FRONTEND_URL}`, credentials: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// app.set("trust proxy", 1);
+app.set("trust proxy", 1);
 const sessionMiddleware = session({
   store: new pgSession({
     conString: process.env.DATABASE_URL,
