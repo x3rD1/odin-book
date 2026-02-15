@@ -103,7 +103,7 @@ export function CommentProvider({ children }) {
           postId,
           commentAuthorId,
           content,
-          comment: newReply,
+          comment: newReply.reply,
           actor: user,
           notif: newReply.notif,
         });
@@ -127,7 +127,7 @@ export function CommentProvider({ children }) {
         postId,
         authorId,
         content,
-        comment: newComment,
+        comment: newComment.comment,
         actor: user,
         notif: newComment.notif,
       });
