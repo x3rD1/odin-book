@@ -21,10 +21,6 @@
   position: relative;
 }
 
-.list > *:hover {
-  background-color: rgba(249, 250, 251, 0.5);
-}
-
 .list > *:last-child {
   border-bottom: none;
 }
@@ -158,24 +154,11 @@
   }
 
   .inputContainer {
-    padding: 10px;
-    padding-bottom: calc(10px + env(safe-area-inset-bottom));
+    padding: 0;
   }
 }
 
 @media (prefers-color-scheme: dark) {
-  .list {
-    border-color: #374151;
-  }
-
-  .list > * {
-    border-color: #374151;
-  }
-
-  .list > *:hover {
-    background-color: rgba(55, 65, 81, 0.3);
-  }
-
   .error {
     background-color: rgba(127, 29, 29, 0.2);
     border-color: #7f1d1d;
@@ -194,11 +177,5 @@
 
   .empty h3 {
     color: #f9fafb;
-  }
-
-  .inputContainer {
-    background: #1f2937;
-    border-color: #374151;
-    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.2);
   }
 }

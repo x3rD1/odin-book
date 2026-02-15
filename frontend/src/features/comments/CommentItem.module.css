@@ -215,10 +215,6 @@
     background-color: #f9fafb;
   }
 
-  .content {
-    background-color: #f3f4f6;
-  }
-
   .username {
     color: #111827;
   }
@@ -229,10 +225,6 @@
 
   .text {
     color: #374151;
-  }
-
-  .mediaContainer {
-    background-color: #000000;
   }
 
   .viewMore > span {
