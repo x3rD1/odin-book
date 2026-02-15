@@ -67,7 +67,10 @@ function PostItem({
       <div className={styles.content}>{content}</div>
 
       {mediaUrl && (
-        <div className={styles.mediaContainer}>
+        <div
+          className={styles.mediaContainer}
+          onClick={() => navigate(`/posts/${id}`)}
+        >
           <Media url={mediaUrl} type={mediaType} />
         </div>
       )}
