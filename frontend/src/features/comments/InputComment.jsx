@@ -110,11 +110,17 @@ function InputComment({ postId, author, ref, isFocused, setIsFocused }) {
     <>
       <div className={styles.inputWrapper} ref={containerRef}>
         <div className={styles.inputContainer}>
-          <input
+          <textarea
             ref={ref}
-            type="text"
+            name="comment"
+            autoComplete="off"
+            rows={1}
             value={comment}
             onChange={(e) => setComment(e.target.value)}
+            onInput={(e) => {
+              e.target.style.height = "auto";
+              e.target.style.height = e.target.scrollHeight + "px";
+            }}
             onFocus={() => setIsFocused(true)}
             placeholder={
               replyTo
